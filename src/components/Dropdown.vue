@@ -13,7 +13,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onUnmounted, ref } from "vue";
+import { defineComponent, ref, watch } from "vue";
+import useClickoutside from "../hooks/useClickOutside";
 
 export default defineComponent({
   name: "Dropdown",
@@ -29,18 +30,11 @@ export default defineComponent({
     const toggleOpen = () => {
       isOpen.value = !isOpen.value;
     };
-    const handler = (e: MouseEvent) => {
-      if (dropdownRef.value) {
-        if (!dropdownRef.value.contains(e.target as HTMLElement)) {
-          isOpen.value = false;
-        }
+    const isClickoutside = useClickoutside(dropdownRef);
+    watch(isClickoutside, () => {
+      if (isOpen.value && isClickoutside.value) {
+        isOpen.value = false;
       }
-    };
-    onMounted(() => {
-      document.addEventListener("click", handler);
-    });
-    onUnmounted(() => {
-      document.removeEventListener("click", handler);
     });
     return {
       isOpen,
