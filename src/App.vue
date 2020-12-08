@@ -5,13 +5,20 @@
     <validate-form @form-submit="onFormSubmit">
       <div class="mb-3">
         <label class="form-lable">邮箱地址</label>
-        <validate-input :rules="emailRules" v-model="emailVal"></validate-input>
+        <validate-input
+          type="email"
+          :rules="emailRules"
+          v-model="emailVal"
+          placeholder="请输入邮箱"
+        ></validate-input>
       </div>
       <div class="mb-3">
         <label class="form-lable">密码</label>
         <validate-input
+          type="password"
           :rules="passwordRules"
           v-model="passwordVal"
+          placeholder="请输入密码"
         ></validate-input>
       </div>
       <template #submit>
@@ -69,7 +76,7 @@ export default defineComponent({
       { type: "password", message: "密码格式不正确（最短6位，最长16位）" }
     ];
     const onFormSubmit = (result: boolean) => {
-      console.log("1234", result);
+      console.log("result", result);
     };
     return {
       //      list: testData,

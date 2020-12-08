@@ -1,12 +1,12 @@
 <template>
   <div class="validate-input-container pb-3">
     <input
-      type="text"
       class="form-control"
       :class="{ 'is-invalid': inputRef.error }"
       :value="inputRef.val"
       @blur="validateInput"
       @input="updateValue"
+      v-bind="$attrs"
     />
     <span v-if="inputRef.error" class="invalid-feedback">{{
       inputRef.message
@@ -15,7 +15,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, reactive } from "vue";
+import { defineComponent, onMounted, PropType, reactive } from "vue";
+import { emitter } from "./ValidateForm.vue";
 
 const emailReg = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
 const passwordReg = /^[\w_-]{6,16}$/;
@@ -29,6 +30,7 @@ export default defineComponent({
     rules: Array as PropType<RulesProp>,
     modelValue: String
   },
+  inheritAttrs: false,
   setup(props, context) {
     const inputRef = reactive({
       val: props.modelValue || "",
@@ -58,13 +60,18 @@ export default defineComponent({
             default:
               break;
           }
-          return passed;
+          return {
+            passed
+          };
         });
         inputRef.error = !allPassed;
         return allPassed;
       }
       return true;
     };
+    onMounted(() => {
+      emitter.emit("form-item-created", validateInput);
+    });
     return {
       inputRef,
       validateInput,
