@@ -18,8 +18,9 @@
 import { defineComponent, PropType, reactive } from "vue";
 
 const emailReg = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+const passwordReg = /^[\w_-]{6,16}$/;
 interface RuleProp {
-  type: "required" | "email";
+  type: "required" | "email" | "password";
   message: string;
 }
 export type RulesProp = RuleProp[];
@@ -51,13 +52,18 @@ export default defineComponent({
             case "email":
               passed = emailReg.test(inputRef.val);
               break;
+            case "password":
+              passed = passwordReg.test(inputRef.val);
+              break;
             default:
               break;
           }
           return passed;
         });
         inputRef.error = !allPassed;
+        return allPassed;
       }
+      return true;
     };
     return {
       inputRef,

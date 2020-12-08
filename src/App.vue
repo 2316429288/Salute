@@ -2,12 +2,22 @@
   <div class="container">
     <global-header :user="currentUser"></global-header>
     <!-- <column-list :list="list"></column-list> -->
-    <form action="">
+    <validate-form @form-submit="onFormSubmit">
       <div class="mb-3">
         <label class="form-lable">邮箱地址</label>
-        <validata-input :rules="emailRules" v-model="emailVal"></validata-input>
+        <validate-input :rules="emailRules" v-model="emailVal"></validate-input>
       </div>
-    </form>
+      <div class="mb-3">
+        <label class="form-lable">密码</label>
+        <validate-input
+          :rules="passwordRules"
+          v-model="passwordVal"
+        ></validate-input>
+      </div>
+      <template #submit>
+        <span class="btn btn-danger">Submit</span>
+      </template>
+    </validate-form>
   </div>
 </template>
 
@@ -16,7 +26,8 @@ import { defineComponent, ref } from "vue";
 import "bootstrap/dist/css/bootstrap.min.css";
 //import ColumnList, { ColumnProps } from "./components/ColumnList.vue";
 import GlobalHeader, { UserProps } from "./components/GlobalHeader.vue";
-import ValidataInput, { RulesProp } from "./components/ValidateInput.vue";
+import ValidateInput, { RulesProp } from "./components/ValidateInput.vue";
+import ValidateForm from "./components/ValidateForm.vue";
 
 // 测试数据
 const currentUser: UserProps = {
@@ -43,19 +54,31 @@ export default defineComponent({
   components: {
     // ColumnList,
     GlobalHeader,
-    ValidataInput
+    ValidateInput,
+    ValidateForm
   },
   setup() {
-    const emailVal = ref("salute");
+    const emailVal = ref("");
+    const passwordVal = ref("");
     const emailRules: RulesProp = [
       { type: "required", message: "电子邮箱地址不能为空" },
       { type: "email", message: "请输入正确的电子邮箱格式" }
     ];
+    const passwordRules: RulesProp = [
+      { type: "required", message: "密码不能为空" },
+      { type: "password", message: "密码格式不正确（最短6位，最长16位）" }
+    ];
+    const onFormSubmit = (result: boolean) => {
+      console.log("1234", result);
+    };
     return {
       //      list: testData,
       currentUser,
+      emailVal,
       emailRules,
-      emailVal
+      passwordVal,
+      passwordRules,
+      onFormSubmit
     };
   }
 });
