@@ -16,6 +16,7 @@ import mitt from "mitt";
 type validateFunc = () => boolean;
 export const emitter = mitt();
 export default defineComponent({
+  name: "ValidateForm",
   emits: ["form-submit"],
   setup(props, context) {
     let funcArr: validateFunc[] = [];

@@ -26,6 +26,7 @@ interface RuleProp {
 }
 export type RulesProp = RuleProp[];
 export default defineComponent({
+  name: "ValidateInput",
   props: {
     rules: Array as PropType<RulesProp>,
     modelValue: String
