@@ -6,7 +6,7 @@
     >
       <div class="col-3 text-center">
         <img
-          :src="column.avatar"
+          :src="column.avatar.url"
           :alt="column.title"
           class="rounded-circle border w-100"
         />
@@ -21,17 +21,23 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import { testData, testPosts } from "../testData";
+import { useStore } from "vuex";
+import { GlobalDataProps } from "../store";
 import PostList from "../components/PostList.vue";
 
 export default defineComponent({
   setup() {
     const router = useRoute();
+    const store = useStore<GlobalDataProps>();
     const currentId = +router.params.id;
-    const column = testData.find(c => c.id === currentId);
-    const list = testPosts.filter(post => post.columnId === currentId);
+    onMounted(() => {
+      store.dispatch("fetchColumn", currentId);
+      store.dispatch("fetchPosts", currentId);
+    });
+    const column = computed(() => store.getters.getColumnById(currentId));
+    const list = computed(() => store.getters.getPostByCid(currentId));
     return {
       column,
       list

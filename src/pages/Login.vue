@@ -26,6 +26,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
+import { useStore } from "vuex";
 import ValidateInput, { RulesProp } from "../components/ValidateInput.vue";
 import ValidateForm from "../components/ValidateForm.vue";
 import { useRouter } from "vue-router";
@@ -40,6 +41,7 @@ export default defineComponent({
     const emailVal = ref("");
     const passwordVal = ref("");
     const router = useRouter();
+    const store = useStore();
     const emailRules: RulesProp = [
       { type: "required", message: "电子邮箱地址不能为空" },
       { type: "email", message: "请输入正确的电子邮箱格式" }
@@ -49,9 +51,9 @@ export default defineComponent({
       { type: "password", message: "密码格式不正确（最短6位，最长16位）" }
     ];
     const onFormSubmit = (result: boolean) => {
-      console.log("result", result);
       if (result) {
-        router.push(`/column/${3}`);
+        router.push("/");
+        store.commit("login");
       }
     };
     return {
